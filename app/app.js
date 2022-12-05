@@ -46,3 +46,9 @@ app.get("/hello/:name", function(req, res) {
 app.listen(3000,function(){
     console.log(`Server running at http://127.0.0.1:3000/`);
 });
+
+
+// Customer coffee card initial
+app.get("/mycard/:id", (req,res)=>{
+    res.send("ID: " + req.params.id)
+})
