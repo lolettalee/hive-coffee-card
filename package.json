@@ -1,7 +1,7 @@
 {
   "name": "sd2-example",
   "version": "1.0.0",
-  "description": "",
+  "description": "test",
   "main": "index.js",
   "scripts": {
     "start": "supervisor index.js",
