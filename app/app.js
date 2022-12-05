@@ -16,8 +16,20 @@ const db = require('./services/db');
 
 // Create a route for root - /
 app.get("/", function(req, res) {
-    res.send("Hello world!");
+    res.send("Welcome to Hive Coffee Card");
 });
+
+// Create a route for customer card
+app.get("/card/:id", function(req, res) {
+    res.render("card");
+});
+
+// Create a route for /mycard/id
+app.get("/mycard/:id", function(req, res) {
+    console.log(req.params);
+    res.send("ID: " + req.params.id);
+});
+
 
 // Create a route for testing the db
 app.get("/db_test", function(req, res) {
@@ -27,28 +39,6 @@ app.get("/db_test", function(req, res) {
         console.log(results);
         res.send(results)
     });
-});
-
-// Create a route for customer card
-app.get("/card/:id", function(req, res) {
-    res.render("card");
-});
-
-// Create a route for /goodbye
-// Responds to a 'GET' request
-app.get("/goodbye", function(req, res) {
-    res.send("Goodbye world!");
-});
-
-// Create a dynamic route for /hello/<name>, where name is any value provided by user
-// At the end of the URL
-// Responds to a 'GET' request
-app.get("/hello/:name", function(req, res) {
-    // req.params contains any parameters in the request
-    // We can examine it in the console for debugging purposes
-    console.log(req.params);
-    //  Retrieve the 'name' parameter and use it in a dynamically generated page
-    res.send("Hello " + req.params.name);
 });
 
 // Start server on port 3000
