@@ -4,6 +4,10 @@ const express = require("express");
 // Create express app
 var app = express();
 
+// Use the Pug templating engine
+app.set('view engine','pug');
+app.set('views','./app/views');
+
 // Add static files location
 app.use(express.static("static"));
 
@@ -23,6 +27,11 @@ app.get("/db_test", function(req, res) {
         console.log(results);
         res.send(results)
     });
+});
+
+// Create a route for customer card
+app.get("/card/:id", function(req, res) {
+    res.render("card");
 });
 
 // Create a route for /goodbye
