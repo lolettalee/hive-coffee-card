@@ -2,10 +2,23 @@ extends layout
 block content
     - console.log(data)
     .main-content 
-    h1 All students 
+    <link rel="stylesheet" type="text/css" href="./style.css">
+    h1 HIVE CAFE
+    <button type="search">Search</button>
+
+      //<!-- input tag -->
+
+       <input id="searchbar" onkeyup="search_names()" type="text"
+
+         name="search" placeholder="Search names">
+    
     table(border=1)
         for item in data 
             tr  
-                td #{item.id}
+                td #{item.user_id}
+                
+                td #{item.user_email}
                 td 
-                    a(href='/student-single/' + item.id) #{item.name}
+                    a(href='/user-single/' + item.user_id) #{item.user_name}
+                    
+
