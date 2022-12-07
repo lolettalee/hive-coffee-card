@@ -31,7 +31,6 @@ app.get("/mycard/:id", function(req, res) {
 });
 
 // Create a route for homepage
-
 app.get("/home", function(req, res) {
     var sql = 'select * from user where user_role = "customer" ';
     db.query(sql).then(results => {
@@ -41,6 +40,21 @@ app.get("/home", function(req, res) {
     });
 });
 
+// Test - display a formatted user list
+app.get("/all-users-formatted", function(req,res) {
+    var sql = 'select * from user';
+    var output = '<table border="1px">';
+    db.query(sql).then(results => {
+        for (var row of results) {
+            output += '<tr>';
+            output += '<td>' + row.user_id + '</td>';
+            output += '<td>' + row.user_name + '</td>';
+            output += '</tr>'
+        }
+        output+= '</table>';
+        res.send(output);
+    });
+});
 
 
 // Create a route for testing the db
