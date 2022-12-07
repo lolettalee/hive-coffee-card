@@ -30,11 +30,23 @@ app.get("/mycard/:id", function(req, res) {
     res.send("ID: " + req.params.id);
 });
 
+// Create a route for homepage
+
+app.get("/home", function(req, res) {
+    var sql = 'select * from user where user_role = "customer" ';
+    db.query(sql).then(results => {
+    	    // Send the results rows to the all-students template
+    	    // The rows will be in a variable called data
+        res.render('home', {data: results});
+    });
+});
+
+
 
 // Create a route for testing the db
 app.get("/db_test", function(req, res) {
     // Assumes a table called test_table exists in your database
-    sql = 'select * from test_table';
+    sql = 'select * from user';
     db.query(sql).then(results => {
         console.log(results);
         res.send(results)
@@ -45,3 +57,4 @@ app.get("/db_test", function(req, res) {
 app.listen(3000,function(){
     console.log(`Server running at http://127.0.0.1:3000/`);
 });
+
