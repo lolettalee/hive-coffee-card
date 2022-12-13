@@ -1,0 +1,34 @@
+html {
+    font-size: 2vh;
+    font-family: Arial;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 1em;
+}
+
+.stamps-container {
+    display: grid;
+    justify-content: space-evenly;
+    grid-template-columns: auto auto auto;
+}
+
+.stamps-container .stamp-point {
+    display: flex;
+    align-items: center;
+    padding: 1em;
+}
+
+.stamps-container .stamp-point .stamp-circle {
+    width: 2em;
+    height: 2em;
+    border: 3px solid black;
+    border-radius: 50%;
+}
+
+.stamps-container .stamp-point div {
+    font-size: 1em;
+    padding: 0.5em;
+}
