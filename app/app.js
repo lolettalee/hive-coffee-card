@@ -26,8 +26,7 @@ app.get("/card/:id", function(req, res) {
 
 // Create a route for /mycard/id
 app.get("/mycard/:id", function(req, res) {
-    console.log(req.params);
-    res.send("ID: " + req.params.id);
+    res.render("mycard")
 });
 
 // Create a route for homepage
