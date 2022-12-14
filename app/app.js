@@ -15,9 +15,9 @@ app.use(express.static('static'));
 const db = require('./services/db');
 const { User } = require('./models/user');
 
-// Create a route for root - /
+// Welcome route
 app.get('/', function (req, res) {
-  res.send('Welcome to Hive Coffee Card');
+  res.render('index');
 });
 
 // Create a route for customer card
@@ -25,23 +25,26 @@ app.get('/card/:id', function (req, res) {
   res.render('card');
 });
 
-// Create a route for /mycard/id
-app.get('/mycard/:id', function (req, res) {
-  res.render('mycard');
+// Customer's view route
+app.get('/mycard/:id', async function (req, res) {
+  const cardId = req.params.id;
+  const user = new User(cardId);
+  await user.fetch();
+  res.render('mycard', {user});
 });
 
-// Create a route for homepage
+// All users route
 app.get('/users', function (req, res) {
   // var sql = 'select * from user where user_role = "customer" ';
   const sql = 'select * from user';
   db.query(sql).then(results => {
     // Send the results rows to the all-students template
     // The rows will be in a variable called data
-    res.render('home', { data: results });
+    res.render('users', { data: results });
   });
 });
 
-// single user route
+// Single user route
 app.get('/users/:id', async function (req, res) {
   const userId = req.params.id;
   const user = new User(userId);

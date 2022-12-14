@@ -1,39 +1,35 @@
-html
-    head
-        style
-            include style.css
-    body
-        div(class='container')
-            div(class='header')
-                h1 Hive Cafe
-                h2 Lihsin's Coffee Card
-                h3 ID: xxxx
-            div(class='stamps-container')
-                div(class='stamp-point')
-                    div(class='stamp-circle')
-                    div 1
-                div(class='stamp-point')
-                    div(class='stamp-circle')
-                    div 2
-                div(class='stamp-point')
-                    div(class='stamp-circle')
-                    div 3
-                div(class='stamp-point')
-                    div(class='stamp-circle')
-                    div 4
-                div(class='stamp-point')
-                    div(class='stamp-circle')
-                    div 5
-                div(class='stamp-point')
-                    div(class='stamp-circle')
-                    div 6
-                div(class='stamp-point')
-                    div(class='stamp-circle')
-                    div 7
-                div(class='stamp-point')
-                    div(class='stamp-circle')
-                    div 8
-                div(class='stamp-point')
-                    div(class='stamp-circle')
-                    div 9
-            p Collect 9 stamps to redeem a free coffee
+extends layout
+block content
+    div(class='header')
+        h1 HIVE COFFEE CARD
+        h2 #{user.name}'s Card
+        h3 ID: xxxx
+    div(class='stamps-container')
+        div(class='stamp-point')
+            div(class='stamp-circle')
+            div 1
+        div(class='stamp-point')
+            div(class='stamp-circle')
+            div 2
+        div(class='stamp-point')
+            div(class='stamp-circle')
+            div 3
+        div(class='stamp-point')
+            div(class='stamp-circle')
+            div 4
+        div(class='stamp-point')
+            div(class='stamp-circle')
+            div 5
+        div(class='stamp-point')
+            div(class='stamp-circle')
+            div 6
+        div(class='stamp-point')
+            div(class='stamp-circle')
+            div 7
+        div(class='stamp-point')
+            div(class='stamp-circle')
+            div 8
+        div(class='stamp-point')
+            div(class='stamp-circle')
+            div 9
+    p Collect 9 stamps to redeem a free coffee

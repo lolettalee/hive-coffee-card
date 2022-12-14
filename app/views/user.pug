@@ -1,6 +1,8 @@
 extends layout
 block content
-    h1 HIVE COFFEE CARD- single user
+    h1 HIVE COFFEE CARD
+    h2 #{user.role}
     p Name: #{user.name}
     p Email: #{user.email}
-    p Role: #{user.role}
+    p Stamps Collected: 0
+    a(class='button' href='/users') Back
