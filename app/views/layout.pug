@@ -1,15 +1,7 @@
 html 
     head    
         title 'Hive Coffee Card'
-    body 
-    extends layout
+        style
+            include style.css
+    body
     block content
-        - console.log(data)
-        .main-content 
-        h1 All users 
-        table(border=1)
-            for item in data 
-                tr  
-                    td #{item.id}
-                    td
-                        a(href='/user-single/' + item.id) #{item.name}

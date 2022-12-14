@@ -1,8 +1,9 @@
+extends layout
 block content
   - console.log(data)
   .main-content
   <link rel="stylesheet" type="text/css" href="./style.css">
-  h1 HIVE CAFE
+  h1 HIVE CAFE CARD all users
   <button type="search">Search</button>
 
   //<!-- input tag -->
@@ -22,7 +23,7 @@ block content
           tr
               td #{item.user_id}
               td
-                  a(href='/user-single/' + item.user_id) #{item.user_name}
+                  a(href='/users/' + item.user_id) #{item.user_name}
               td #{item.user_role}
               td #{item.user_email}
               td
