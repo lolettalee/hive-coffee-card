@@ -1,6 +1,6 @@
 html 
     head    
-        title 'HIVE CAFE'
+        title 'Hive Coffee Card'
     body 
     extends layout
     block content
@@ -11,7 +11,5 @@ html
             for item in data 
                 tr  
                     td #{item.id}
-                    td 
+                    td
                         a(href='/user-single/' + item.id) #{item.name}
-
-       

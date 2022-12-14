@@ -2,7 +2,7 @@
 const express = require("express");
 
 // Create express app
-var app = express();
+const app = express();
 
 // Use the Pug templating engine
 app.set('view engine', 'pug');
@@ -31,7 +31,8 @@ app.get("/mycard/:id", function(req, res) {
 
 // Create a route for homepage
 app.get("/home", function(req, res) {
-    var sql = 'select * from user where user_role = "customer" ';
+    // var sql = 'select * from user where user_role = "customer" ';
+    const sql = 'select * from user'
     db.query(sql).then(results => {
     	    // Send the results rows to the all-students template
     	    // The rows will be in a variable called data
