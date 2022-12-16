@@ -15,14 +15,40 @@ app.use(express.static('static'));
 const db = require('./services/db');
 const { User } = require('./models/user');
 
-// Welcome route
-app.get('/', function (req, res) {
-  res.render('index');
+// Set express-sessions for login
+var session = require('express-session');
+app.use(session({
+  secret: 'secretkeysdfjsflyoifasd',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false }
+}));
+
+// Welcome route for root /
+app.get("/", function(req, res) {
+  console.log(req.session);
+  if (req.session.uid) {
+  res.send('Welcome back, ' + req.session.uid + '!');
+} else {
+  res.send('Please login to view this page!');
+}
+res.end();
 });
 
-// Create a route for customer card
-app.get('/card/:id', function (req, res) {
-  res.render('card');
+// Register route
+app.get('/register', function (req, res) {
+  res.render('register');
+});
+
+// Login
+app.get('/login', function (req, res) {
+  res.render('login');
+});
+
+// Logout
+app.get('/logout', function (req, res) {
+  req.session.destroy();
+  res.redirect('/login');
 });
 
 // Customer's view route
@@ -52,23 +78,52 @@ app.get('/users/:id', async function (req, res) {
   res.render('user', { user });
 });
 
-
-// Test - display a formatted user list
-app.get('/all-users-formatted', function (req, res) {
-  var sql = 'select * from user';
-  var output = '<table border="1px">';
-  db.query(sql).then(results => {
-    for (var row of results) {
-      output += '<tr>';
-      output += '<td>' + row.user_id + '</td>';
-      output += '<td>' + row.user_name + '</td>';
-      output += '</tr>';
-    }
-    output += '</table>';
-    res.send(output);
-  });
+// Set password for an existing record or create a new user
+app.post('/set-password', async function (req, res) {
+  params = req.body;
+  var User = new User(params.email);
+  try {
+      uId = await User.getIdFromEmail();
+      if (uId) {
+          // If a valid, existing user is found, set the password and redirect to user's page
+          await User.setUserPassword(params.password);
+          res.redirect('/users/' + uId);
+      }
+      else {
+          // If no existing user is found, add a new one
+          newId = await User.addUser(params.email);
+          res.send('Test');
+      }
+  } catch (err) {
+      console.error(`Error while adding password `, err.message);
+  }
 });
 
+// Check submitted email and password pair
+app.post('/authenticate', async function (req, res) {
+  params = req.body;
+  var User = new User(params.email);
+  try {
+      uId = await user.getIdFromEmail();
+      if (uId) {
+          match = await user.authenticate(params.password);
+          if (match) {
+              req.session.uid = uId;
+              req.session.loggedIn = true;
+              console.log(req.session);
+              res.redirect('/users/' + uId);
+          }
+          else {
+              res.send('invalid password');
+          }
+      }
+      else {
+          res.send('invalid email');
+      }
+  } catch (err) {
+      console.error(`Error while comparing `, err.message);
+  }
+});
 
 // Create a route for testing the db
 app.get('/db_test', function (req, res) {
