@@ -17,13 +17,15 @@ block content
           td ID
           td Name
           td Role
+          td Stamps_Total 
+          td Date_and_time
           td Email
-          td Stamps
       for item in data
           tr
               td #{item.user_id}
               td
                   a(href='/users/' + item.user_id) #{item.user_name}
               td #{item.user_role}
+              td #{item.stamp_total}
+              td #{item.stamp_datetime}
               td #{item.user_email}
-              td
