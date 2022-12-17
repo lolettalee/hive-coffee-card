@@ -122,3 +122,5 @@ dist
 
 package.json
 package-lock.json
+
+.idea
