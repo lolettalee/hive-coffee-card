@@ -5,4 +5,10 @@ block content
     p Name: #{user.name}
     p Email: #{user.email}
     p Stamps Collected: #{user.stamps}
-    a(class='button' href='/users') Back
+    <a  href='/users' > <button> Back </button> </a>
+
+
+    form(action='/updatestamp/' + user.id, method = "GET")
+        input(type='hidden' name='user_id' value=user.id)
+        div 
+        input(type='submit' value='Update Stamp')

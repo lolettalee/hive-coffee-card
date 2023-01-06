@@ -54,6 +54,24 @@ app.get('/users/:id', async function (req, res) {
   res.render('user', { user });
 });
 
+// Single user stamp update
+app.get('/updatestamp/:id', async function (req, res) {
+  const userId = req.params.id;
+  const user = new User(userId);
+  
+  try {
+   await user.UpdateStamp();
+    //res.send('Update successful');
+   res.render('stamps', { user });
+   }
+  catch (err) {
+    console.error(`Error while updating this user's stamp `, err.message);
+}
+
+
+});
+
+
 
 // Create a route for testing the db
 app.get('/db_test', function (req, res) {

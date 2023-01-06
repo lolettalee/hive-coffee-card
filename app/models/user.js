@@ -7,8 +7,8 @@ class User {
   email;
   stamps;
 
-  constructor(id) {
-    this.id = id;
+  constructor(user_id) {
+    this.id = user_id;
   }
 
   async fetch() {
@@ -19,6 +19,14 @@ class User {
     this.email = result.user_email;
     this.stamps= result.stamp_total;
   }
+
+  async UpdateStamp() {
+    const sql = "update stamp set stamp_total = if(stamp_total < 9,  1 + stamp_total, 0*stamp_total), stamp_datetime =now() where user_id = ?";
+    const results = await db.query(sql, [this.id]);
+    this.stamps = results.stamp_total;
+    return results;
+  
+}
 }
 
 module.exports = {
