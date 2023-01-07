@@ -3,8 +3,10 @@ block content
     h1 Hive Coffee Card
     h1 Register here
     form(action='/set-password' method='POST')
+        label(for='email') Enter your full name: 
+        input('name'='username') 
         label(for='email') Enter your email: 
-        input('name'='email') 
+        input('name'='email')
         label(for='email') Enter your password: 
         input('name'='password')
         input(type='submit' value='Submit')
