@@ -16,10 +16,44 @@ const db = require('./services/db');
 const { User } = require('./models/user');
 
 // Welcome route
+// Set express-sessions for login
+var session = require('express-session');
+app.use(session({
+  secret: 'secretkeysdfjsflyoifasd',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false }
+}));
 
-app.get('/', function (req, res) {
-  res.render('index');
+// Welcome route for root /
+app.get("/", function(req, res) {
+  console.log(req.session);
+  if (req.session.uid) {
+  res.send('Welcome back, ' + req.session.uid + '!');
+} else {
+  //res.send('Please login to view this page!');
+  res.render("welcome");
+}
+res.end();
 });
+
+// Register route
+app.get('/register', function (req, res) {
+  res.render('register');
+});
+
+// Login
+app.get('/login', function (req, res) {
+  res.render('login');
+});
+
+// Logout
+app.get('/logout', function (req, res) {
+  req.session.destroy();
+  res.redirect('/login');
+});
+
+
 
 // Create a route for customer card
 
@@ -76,6 +110,53 @@ app.get('/updatestamp/:id', async function (req, res) {
 
 });
 
+
+// Set password for an existing record or create a new user
+app.post('/set-password', async function (req, res) {
+  params = req.body;
+  var User = new User(params.email);
+  try {
+      uId = await User.getIdFromEmail();
+      if (uId) {
+          // If a valid, existing user is found, set the password and redirect to user's page
+          await User.setUserPassword(params.password);
+          res.redirect('/users/' + uId);
+      }
+      else {
+          // If no existing user is found, add a new one
+          newId = await User.addUser(params.email);
+          res.send('Test');
+      }
+  } catch (err) {
+      console.error(`Error while adding password `, err.message);
+  }
+});
+
+// Check submitted email and password pair
+app.post('/authenticate', async function (req, res) {
+  params = req.body;
+  var User = new User(params.email);
+  try {
+      uId = await user.getIdFromEmail();
+      if (uId) {
+          match = await user.authenticate(params.password);
+          if (match) {
+              req.session.uid = uId;
+              req.session.loggedIn = true;
+              console.log(req.session);
+              res.redirect('/users/' + uId);
+          }
+          else {
+              res.send('invalid password');
+          }
+      }
+      else {
+          res.send('invalid email');
+      }
+  } catch (err) {
+      console.error(`Error while comparing `, err.message);
+  }
+});
 
 
 // Create a route for testing the db
