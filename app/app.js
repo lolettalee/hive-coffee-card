@@ -23,9 +23,13 @@ app.get('/', function (req, res) {
 
 // Create a route for customer card
 
-app.get('/card/:id', function (req, res) {
-  res.render('card');
+app.get('/card/:id', async function (req, res) {
+  const cardId = req.params.id;
+  const user = new User(cardId);
+  await user.fetch();
+  res.render('card', {user});
 });
+  
 
 // Customer's view route
 app.get('/mycard/:id', async function (req, res) {
@@ -61,6 +65,7 @@ app.get('/updatestamp/:id', async function (req, res) {
   
   try {
    await user.UpdateStamp();
+   await user.fetch();
     //res.send('Update successful');
    res.render('stamps', { user });
    }
