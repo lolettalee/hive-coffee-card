@@ -53,8 +53,6 @@ app.get('/logout', function (req, res) {
   res.redirect('/login');
 });
 
-
-
 // Create a route for customer card
 
 app.get('/card/:id', async function (req, res) {
@@ -62,8 +60,6 @@ app.get('/card/:id', async function (req, res) {
   const user = new User(cardId);
   await user.fetch();
   res.render('card', {user});
-});
-  
 
 // Customer's view route
 app.get('/mycard/:id', async function (req, res) {
@@ -110,6 +106,52 @@ app.get('/updatestamp/:id', async function (req, res) {
 
 });
 
+// Set password for an existing record or create a new user
+app.post('/set-password', async function (req, res) {
+  params = req.body;
+  var User = new User(params.email);
+  try {
+      uId = await User.getIdFromEmail();
+      if (uId) {
+          // If a valid, existing user is found, set the password and redirect to user's page
+          await User.setUserPassword(params.password);
+          res.redirect('/users/' + uId);
+      }
+      else {
+          // If no existing user is found, add a new one
+          newId = await User.addUser(params.email);
+          res.send('Test');
+      }
+  } catch (err) {
+      console.error(`Error while adding password `, err.message);
+  }
+});
+
+// Check submitted email and password pair
+app.post('/authenticate', async function (req, res) {
+  params = req.body;
+  var User = new User(params.email);
+  try {
+      uId = await user.getIdFromEmail();
+      if (uId) {
+          match = await user.authenticate(params.password);
+          if (match) {
+              req.session.uid = uId;
+              req.session.loggedIn = true;
+              console.log(req.session);
+              res.redirect('/users/' + uId);
+          }
+          else {
+              res.send('invalid password');
+          }
+      }
+      else {
+          res.send('invalid email');
+      }
+  } catch (err) {
+      console.error(`Error while comparing `, err.message);
+  }
+});
 
 // Set password for an existing record or create a new user
 app.post('/set-password', async function (req, res) {
@@ -173,4 +215,3 @@ app.get('/db_test', function (req, res) {
 app.listen(3000, function () {
   console.log(`Server running at http://127.0.0.1:3000/`);
 });
-
