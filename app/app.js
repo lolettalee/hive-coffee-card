@@ -60,6 +60,7 @@ app.get('/card/:id', async function (req, res) {
   const user = new User(cardId);
   await user.fetch();
   res.render('card', {user});
+});
 
 // Customer's view route
 app.get('/mycard/:id', async function (req, res) {
