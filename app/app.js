@@ -13,9 +13,12 @@ app.use(express.static('static'));
 
 // Get the functions in the db.js file to use
 const db = require('./services/db');
-const { User } = require('./models/user');
+app.use(express.urlencoded({ extended: true }));
 
-// Welcome route
+// Get the models
+const { User } = require('./models/user');
+const { Users } = require('./models/users');
+
 // Set express-sessions for login
 var session = require('express-session');
 app.use(session({
@@ -107,100 +110,62 @@ app.get('/updatestamp/:id', async function (req, res) {
 
 });
 
-// Set password for an existing record or create a new user
-app.post('/set-password', async function (req, res) {
+// Set password route
+app.post('/set-password', function (req, res) {
   params = req.body;
-  var User = new User(params.email);
+  console.log("line 116");
+  console.log(params);
+  console.log("line 118 password");
+  console.log(params.password);
+  var user = new Users(params.email);
   try {
-      uId = await User.getIdFromEmail();
-      if (uId) {
-          // If a valid, existing user is found, set the password and redirect to user's page
-          await User.setUserPassword(params.password);
-          res.redirect('/users/' + uId);
-      }
-      else {
-          // If no existing user is found, add a new one
-          newId = await User.addUser(params.email);
-          res.send('Test');
-      }
-  } catch (err) {
-      console.error(`Error while adding password `, err.message);
-  }
+      user.getIdFromEmail().then( uId => {
+          if(uId) {
+               // If a valid, existing user is found, set the password and redirect to the card page
+              user.setUserPassword(params.password).then ( result => {
+                  res.redirect('/card/' + uId);
+              });
+          }
+          else {
+              // If no existing user is found, add a new one
+              user.addUser(params.email).then( Promise => {
+                  res.send('Password added');
+              });
+          }
+      })
+   } catch (err) {
+       console.error(`Error while adding password `, err.message);
+   }
 });
 
 // Check submitted email and password pair
-app.post('/authenticate', async function (req, res) {
+app.post('/authenticate', function (req, res) {
   params = req.body;
-  var User = new User(params.email);
+  var user = new Users(params.email);
   try {
-      uId = await user.getIdFromEmail();
-      if (uId) {
-          match = await user.authenticate(params.password);
-          if (match) {
-              req.session.uid = uId;
-              req.session.loggedIn = true;
-              console.log(req.session);
-              res.redirect('/users/' + uId);
+      user.getIdFromEmail().then(uId => {
+          if (uId) {
+              user.authenticate(params.password).then(match => {
+                  if (match) {
+                      req.session.uid = uId;
+                      req.session.loggedIn = true;
+                      console.log(req.session);
+                      res.redirect('/card/' + uId);
+                  }
+                  else {
+                      // TODO improve the user journey here
+                      res.send('invalid password');
+                  }
+              });
           }
           else {
-              res.send('invalid password');
+              res.send('invalid email');
           }
-      }
-      else {
-          res.send('invalid email');
-      }
+      })
   } catch (err) {
       console.error(`Error while comparing `, err.message);
   }
 });
-
-// Set password for an existing record or create a new user
-app.post('/set-password', async function (req, res) {
-  params = req.body;
-  var User = new User(params.email);
-  try {
-      uId = await User.getIdFromEmail();
-      if (uId) {
-          // If a valid, existing user is found, set the password and redirect to user's page
-          await User.setUserPassword(params.password);
-          res.redirect('/users/' + uId);
-      }
-      else {
-          // If no existing user is found, add a new one
-          newId = await User.addUser(params.email);
-          res.send('Test');
-      }
-  } catch (err) {
-      console.error(`Error while adding password `, err.message);
-  }
-});
-
-// Check submitted email and password pair
-app.post('/authenticate', async function (req, res) {
-  params = req.body;
-  var User = new User(params.email);
-  try {
-      uId = await user.getIdFromEmail();
-      if (uId) {
-          match = await user.authenticate(params.password);
-          if (match) {
-              req.session.uid = uId;
-              req.session.loggedIn = true;
-              console.log(req.session);
-              res.redirect('/users/' + uId);
-          }
-          else {
-              res.send('invalid password');
-          }
-      }
-      else {
-          res.send('invalid email');
-      }
-  } catch (err) {
-      console.error(`Error while comparing `, err.message);
-  }
-});
-
 
 // Create a route for testing the db
 app.get('/db_test', function (req, res) {
