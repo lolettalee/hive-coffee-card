@@ -128,7 +128,7 @@ app.post('/set-password', function (req, res) {
           }
           else {
               // If no existing user is found, add a new one
-              user.addUser(params.email).then( Promise => {
+              user.addUser(params.password, params.username).then( Promise => {
                   res.send('Password added');
               });
           }

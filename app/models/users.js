@@ -18,9 +18,10 @@ class Users {
 async getIdFromEmail() {
   var sql = "SELECT user_id FROM user WHERE user.user_email = ?";
   const result = await db.query(sql, [this.email]);
+  console.log(result);
   // TODO LOTS OF ERROR CHECKS HERE..
   if (JSON.stringify(result) != '[]') {
-      this.id = result[0].id;
+      this.id = result[0].user_id;
       return this.id;
   }
   else {
@@ -33,23 +34,17 @@ async getIdFromEmail() {
     const pw = await bcrypt.hash(password, 10);
     var sql = "UPDATE user SET user_password = ? WHERE user.user_id = ?"
     const result = await db.query(sql, [pw, this.id]);
-    console.log("this.id");
-    console.log(this.id);
-    console.log("pw");
-    console.log(pw);
-    console.log("password");
-    console.log(password);
     return pw;
 }
 
+
+
   // Add a new record to the users table   
-  async addUser(password) {
+  async addUser(password, username) {
     const pw = await bcrypt.hash(password, 10);
-    var sql = "INSERT INTO user (user_name, user_email, user_password) VALUES (?, ? , ?)";
+    var sql = "INSERT INTO user (user_name, user_email, user_password, user_role) VALUES (?, ? , ?, 'customer')";
+    this.name = username;
     const result = await db.query(sql, [this.name, this.email, pw]);
-    console.log("addUser");
-    console.log(this.name);
-    console.log(result.insertId);
     this.id = result.insertId;
     return true;
 }
@@ -59,7 +54,7 @@ async getIdFromEmail() {
     // Get the stored, hashed password for the user
     var sql = "SELECT user_password FROM user WHERE user.user_id = ?";
     const result = await db.query(sql, [this.id]);
-    const match = await bcrypt.compare(submitted, result[0].password);
+    const match = await bcrypt.compare(submitted, result[0].user_password);
     if (match == true) {
         return true;
     }

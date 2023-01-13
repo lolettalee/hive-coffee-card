@@ -19,6 +19,7 @@ const pool = mysql.createPool(config.db);
 
 // Utility function to query the database
 async function query(sql, params) {
+  console.log(sql, params);
   const [rows, fields] = await pool.execute(sql, params);
 
   return rows;
